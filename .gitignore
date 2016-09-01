@@ -1,0 +1,73 @@
+public class Account 
+{
+public static Account account;
+private static int balance = 1000;
+public static Account getAccount() {
+if (account == null) {
+account = new Account();
+}
+return account;
+}
+
+public static int getBal() {
+    return balance;
+}
+
+public synchronized void withdraw(int bal) {
+    try {
+
+        if (balance >= bal) {
+            System.out.println("-----------------------------------------------------------");
+            System.out.println("Withdraw in Progress");
+            System.out.println(+bal+" Rs has been withdrawn");
+            try {
+                Thread.sleep(100);
+            } 
+            catch (Exception e) {}
+            balance = balance - bal;
+        } else {
+            System.out.println("Sorry! doesn't have enough money for withdraw ");
+        }
+        System.out.println("Available Balance = Rs." + balance);
+    } catch (Exception e) {
+    }
+}
+
+public synchronized void deposit(int bal) {
+    try {
+        if (bal > 0) {
+            System.out.println("-----------------------------------------------------------");
+            System.out.println("Deposit in Progress");
+            System.out.println(+bal+" Rs has been Deposited");
+            try {
+                Thread.sleep(100);
+            } catch (Exception e) {}
+            balance = balance + bal;
+            System.out.println("Available Balance =" + balance);
+    } 
+    }catch (Exception e) {}
+}
+}
+
+public class Main extends Thread implements Runnable {
+public static void main(String[] args) {
+    Main ts1 = new Main();
+    ts1.start();
+    Main ts2 = new Main();
+    ts2.start();
+    Main ts3 = new Main();
+    ts3.start();
+}
+public void run() {
+    for (int i = 0; i < 3; i++) {
+        try {
+            Account acc = Account.getAccount();
+            acc.withdraw(100);
+            acc.deposit(200);
+            Thread.sleep(200);
+        } catch (Exception e) {}
+    }
+    System.out.println("-----------------------------------------------------------");
+    System.out.println("Final Acc balance is Rs." + Account.getBal());
+}
+}
